@@ -7,6 +7,12 @@ using namespace sf;
 
 namespace Math
 {
+    class Point3d
+    {
+        public:
+        float x, y, z;
+        
+    };
 
     int binomialCoeff(int n, int k)
     {

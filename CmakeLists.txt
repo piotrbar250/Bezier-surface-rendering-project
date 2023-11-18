@@ -5,5 +5,5 @@ set(CMAKE_CXX_STANDARD 17)
 
 find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
 
-add_executable(program main.cpp Bezier.hpp Math.hpp Bitmap.hpp FramePixelProcessor.hpp PixelRenderer.hpp GreenShadesPixelRenderer.hpp HeatMapPixelRenderer.hpp global.hpp FrameRateCalculator.hpp)
+add_executable(program main.cpp Bezier.hpp Math.hpp Bitmap.hpp FramePixelProcessor.hpp PixelRenderer.hpp GreenShadesPixelRenderer.hpp HeatMapPixelRenderer.hpp global.hpp FrameRateCalculator.hpp LightSource.hpp LambertianReflectanceProcessor.hpp)
 target_link_libraries(program sfml-graphics sfml-window sfml-system)

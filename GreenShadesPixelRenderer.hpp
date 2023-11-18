@@ -12,7 +12,7 @@ using namespace sf;
 class GreenShadesPixelRenderer : public PixelRenderer
 {
 public:
-    GreenShadesPixelRenderer(Bezier &bezier) : PixelRenderer(bezier) {}
+    GreenShadesPixelRenderer(Bezier &bezier, LightSource& lightSource) : PixelRenderer(bezier, lightSource) {}
 
     virtual void setColors() override
     {

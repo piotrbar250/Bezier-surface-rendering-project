@@ -27,6 +27,6 @@ Bezier& bezier;
 
          for (int x = 0; x < M; x++)
             for (int y = 0; y < N; y++)
-                bitmap.colors[x][y] = Color::Red;
+                bitmap.colors[x][y] = Color::Black;
     }
 };
