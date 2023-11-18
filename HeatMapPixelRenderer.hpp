@@ -22,12 +22,28 @@ public:
 
     void prepPoints()
     {
+        float maxh = -10;
+        int mx=-1, my=-1;
         for (int x = 0; x < M; x++)
             for (int y = 0; y < N; y++)
             {
                 points.push_back(Vector2f(x, N - y));
                 intensities.push_back(bezier.z(float(x) / float(M), float(y) / float(N)));
+
+
+                if(x == 250 && y == 250)
+                {
+                    cout << intensities.back() << endl;
+                }
+                if(intensities.back() > maxh)
+                {
+                    maxh = intensities.back();
+                    mx = x;
+                    my = y;
+                }
             }
+
+        cout << mx << " " << my << " " << maxh << endl;
     }
 
     Color heatmapColor(float intensity)
