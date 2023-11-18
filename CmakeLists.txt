@@ -1,0 +1,9 @@
+cmake_minimum_required(VERSION 3.10)
+project(program)
+
+set(CMAKE_CXX_STANDARD 17)
+
+find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
+
+add_executable(program main.cpp Bezier.hpp Math.hpp HeatMapPixelRenderer.hpp global.hpp)
+target_link_libraries(program sfml-graphics sfml-window sfml-system)
