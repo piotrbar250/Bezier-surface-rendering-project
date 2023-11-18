@@ -8,7 +8,9 @@
 #include "GreenShadesPixelRenderer.hpp"
 #include "FramePixelProcessor.hpp"
 #include "Bitmap.hpp"
+#include "FrameRateCalculator.hpp"
 #include <iostream>
+#include <string>
 
 using namespace std;
 using namespace sf;
@@ -19,13 +21,16 @@ Bitmap bitmap;
 int main()
 {
     window.create(VideoMode(M, N), "Bezier surface");
-
+    FrameRateCalculator frameRateCalculator;
     Bezier bezier;
     PixelRenderer* renderer;
     FramePixelProcessor fpp(bezier);
+ 
 
     // renderer = new GreenShadesPixelRenderer(bezier);
     renderer = new PixelRenderer(bezier);
+
+    fpp.calculateHeights();
 
     while (window.isOpen())
     {
@@ -35,11 +40,13 @@ int main()
             if (event.type == Event::Closed)
                 window.close();
         }
-
+        
+        frameRateCalculator.update();
+       
         window.clear(Color::Black);
 
-        if(true) // here goes a condtition for changing control points
-            fpp.calculateHeights();
+        // if(true) // here goes a condtition for changing control points
+        //     setHeights();
         fpp.calculateColors();
         
         renderer->draw();

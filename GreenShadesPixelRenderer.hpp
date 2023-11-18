@@ -14,14 +14,11 @@ class GreenShadesPixelRenderer : public PixelRenderer
 public:
     GreenShadesPixelRenderer(Bezier &bezier) : PixelRenderer(bezier) {}
 
-    void draw()
+    virtual void setColors() override
     {
-        if(true) // here goes a condtition for changing control points
-            setHeights();
-        
-        for(int i = 0; i < points.size(); i++)
-            points[i].color = Color(0, heights[i]/2.0f * 255, 0);
-
-        window.draw(&points[0], points.size(), sf::Points);
+        int index = 0;
+        for (int x = 0; x < M; x++)
+            for (int y = 0; y < N; y++)
+                points[index++].color = Color(0, bitmap.heights[x][y] / 2.0f * 255, 0);
     }
 };

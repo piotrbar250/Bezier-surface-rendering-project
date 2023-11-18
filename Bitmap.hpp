@@ -8,13 +8,11 @@ const int N = 1000, M = 1000;
 class Bitmap
 {
 public:
-    float heights[N][M];
-    Color colors[N][M];
+    float heights[M][N];
+    Color colors[M][N];
 
     Bitmap()
     {
 
-    }
-
-    
+    }  
 };
