@@ -27,32 +27,27 @@ public:
 
     void prepPoints()
     {
-        for (int x = 0; x < M; x++)
-            for (int y = 0; y < N; y++)
-                points.push_back(Vector2f(x, N - y));
+        for (int y = 0; y < H; y++)
+            for (int x = 0; x < W; x++)
+                points.push_back(Vector2f(x, H-y));
     }
 
     virtual void setColors()
     {
         int index = 0;
-        for (int x = 0; x < M; x++)
-            for (int y = 0; y < N; y++)
-                points[index++].color = bitmap.colors[y][x];
+        for (int y = 0; y < H; y++)
+            for (int x = 0; x < W; x++)
+                points[index++].color = bitmap.color[x][y];
     }
     
     void drawLightSource()
     {
-        // cout << "jestem" << endl;
         lightSource.nextFrame();
         lightSource.adjustPosition();
 
-        // cout << lightSource.x << " " << lightSource.y << " " << endl;
-        Vertex vertex(Vector2f(lightSource.x, N-lightSource.y), Color::White);
-        // window.draw(&vertex, 1, sf::Points);
-
         CircleShape circle(5);
         circle.setFillColor(Color::Yellow);
-        circle.setPosition(lightSource.x, lightSource.y);
+        circle.setPosition(lightSource.x, H-lightSource.y);
         window.draw(circle);
     }
 

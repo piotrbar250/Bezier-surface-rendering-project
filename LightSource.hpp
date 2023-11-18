@@ -14,7 +14,7 @@ public:
     float angle;
     LightSource() : LightSource(5) {}
 
-    LightSource(float z ) : originX(M/2), originY(M/2), z(z), radius(100), angle(0.0f){}
+    LightSource(float z ) : originX(W/2), originY(H/2), z(z), radius(100), angle(0.0f){}
 
     void adjustPosition()
     {

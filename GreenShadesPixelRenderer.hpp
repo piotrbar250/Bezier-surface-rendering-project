@@ -17,8 +17,8 @@ public:
     virtual void setColors() override
     {
         int index = 0;
-        for (int x = 0; x < M; x++)
-            for (int y = 0; y < N; y++)
-                points[index++].color = Color(0, bitmap.heights[x][y] / 2.0f * 255, 0);
+        for (int y = 0; y < H; y++)
+            for (int x = 0; x < W; x++)
+                points[index++].color = Color(0, bitmap.height[x][y] / 2.0f * 255, 0);
     }
 };

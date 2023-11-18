@@ -15,32 +15,41 @@ public:
 
     float Z[4][4];
     int prepZ[4][4] = {
-        {0,0,0,2},
+        {2,0,0,2},
         {0,0,0,0},
-        {0,0,0,0},
-        {0,0,0,2}
+        {0,0,2,0},
+        {0,0,0,0}
     };    
-
-    int prepZ2[4][4] = {
-        {1,1,1,1},
-        {1,1,0,1},
-        {1,1,1,1},
-        {1,1,1,1}
-    };
-
     /*
-        z00 - lewy gorny 
+        prepZ visualizes control points
+
+
+        Z - control points:
+
+        z03 z13 z23 z33
+        z02 z12 z22 z32
+        z01 z11 z21 z31
+        z00 z10 z20 z30
     */
 
     void genZ()
     {
-        for(int i = 0; i < 4; i++)
-            for(int j = 0; j < 4; j++)
-                Z[j][4-i-1] = prepZ[i][j];      
+        // for(int i = 0; i < 4; i++)
+        //     for(int j = 0; j < 4; j++)
+        //         Z[j][4-i-1] = prepZ[i][j];      
 
         // for(int i = 0; i < 4; i++)
         //     for(int j = 0; j < 4; j++)
         //         Z[i][j] = prepZ[i][j];
+
+        for(int k = 0; k < 4; k++)
+            Z[k][0] = prepZ[3][k]; 
+        for(int k = 0; k < 4; k++)
+            Z[k][1] = prepZ[2][k]; 
+        for(int k = 0; k < 4; k++)
+            Z[k][2] = prepZ[1][k];  
+        for(int k = 0; k < 4; k++)
+            Z[k][3] = prepZ[0][k];  
     }
 
     Bezier()
