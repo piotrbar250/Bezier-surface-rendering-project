@@ -20,6 +20,9 @@ Bitmap bitmap;
 
 int main()
 {
+    // Bezier bez;
+    // cout << bez.B(0, 2, 0.75) << endl;
+    // return 0;
     window.create(VideoMode(W, H), "Bezier surface");
     window.setFramerateLimit(60);
     FrameRateCalculator frameRateCalculator;

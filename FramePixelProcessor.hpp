@@ -30,7 +30,7 @@ public:
 
         for (int y = 0; y < H; y++)
             for (int x = 0; x < W; x++)
-                bitmap.color[x][y] = prp.computePixelColor(x, y, bitmap.height[x][y]);
+                bitmap.color[x][y] = prp.computePixelColor(float(x) / float(W), float(y) / float(H), bitmap.height[x][y]);
 
         //  for (int y = 0; y < H; y++)
         //     for (int x = 0; x < W; x++)

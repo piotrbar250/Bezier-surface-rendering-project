@@ -16,8 +16,8 @@ class PhongReflectionProcessor
 public:
     Bezier& bezier;
     LightSource& lightSource;
-    float kd = 1, ks = 1;
-    Point3d Il = {1,1,1}, Io = {0,0.2,0};
+    float kd = 0.5, ks = 0.5;
+    Point3d Il = {1,1,1}, Io = {0,0,1};
     Point3d N, L;
     Point3d R, V = {0, 0, 1};
     float m = 1;
@@ -29,9 +29,9 @@ public:
 
     Color computePixelColor(float x, float y, float z)
     {
-        bool debug = true;
-        int debug_x = 250;
-        int debug_y = 250;
+        bool debug = false;
+        float debug_x = 0.75;
+        float debug_y = 0.75;
 
         if(debug && x == debug_x and y == debug_y)
         {
@@ -39,9 +39,15 @@ public:
             cout << "x, y, z:  " << x << " " << y << " " << z << endl;
         }
 
+        if(debug && x == debug_x and y == debug_y)
+        {
+            cout << endl << endl;
+            cout << "pochodnay: " << bezier.tangentY(x, y) << endl;
+        }
+
 
         N = cross(bezier.tangentX(x, y), bezier.tangentY(x, y));
-        L = Point3d(lightSource.x, lightSource.y, lightSource.z) - Point3d(x, y, z);
+        L = Point3d(float(lightSource.x)/float(W), float(lightSource.y)/float(H), lightSource.z) - Point3d(x, y, z);
 
 
         if(debug && x == debug_x and y == debug_y)
@@ -55,7 +61,7 @@ public:
 
         if(debug && x == debug_x and y == debug_y)
         {
-            cout << "Lightsource: " << lightSource.x << " " << lightSource.y << " " << lightSource.z << endl;
+            cout << "Lightsource: " << float(lightSource.x)/float(W) << " " << float(lightSource.y)/float(H) << " " << lightSource.z << endl;
         }
 
 
@@ -77,12 +83,18 @@ public:
     
         R = R.normalized();
         Point3d Ip = Il * Io * kd * max(0.0f, dot(N, L));
-        // // Ip = Ip + Il * Io * kd * max(0.0f, dot(V,R));
+        Ip = Ip + Il * Io * kd * max(0.0f, dot(V,R));
 
         // cout << Ip.y << endl;
  
         // if(x == 1 && y == 0)
         //     exit(1);
+
+        if(debug && x == debug_x and y == debug_y)
+        {
+            cout << endl << endl;
+            cout << "I: " << Ip << endl;
+        }
         return Color(Ip.x*255, Ip.y*255, Ip.z*255);
 
     }
