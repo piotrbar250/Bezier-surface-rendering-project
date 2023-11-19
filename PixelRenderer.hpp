@@ -42,8 +42,8 @@ public:
     
     void drawLightSource()
     {
-        lightSource.nextFrame();
-        lightSource.adjustPosition();
+        // lightSource.nextFrame();
+        // lightSource.adjustPosition();
 
         CircleShape circle(5);
         circle.setFillColor(Color::Yellow);

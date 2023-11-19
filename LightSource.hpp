@@ -12,7 +12,7 @@ public:
     float x,y,z;
     float radius;
     float angle;
-    LightSource() : LightSource(5) {}
+    LightSource() : LightSource(10) {}
 
     LightSource(float z ) : originX(W/2), originY(H/2), z(z), radius(100), angle(0.0f){}
 
