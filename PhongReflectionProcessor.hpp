@@ -42,7 +42,7 @@ public:
         if(debug && x == debug_x and y == debug_y)
         {
             cout << endl << endl;
-            cout << "pochodnay: " << bezier.tangentY(x, y) << endl;
+            cout << "pochodna_y: " << bezier.tangentY(x, y) << endl;
         }
 
 
@@ -83,7 +83,10 @@ public:
     
         R = R.normalized();
         Point3d Ip = Il * Io * kd * max(0.0f, dot(N, L));
-        Ip = Ip + Il * Io * kd * max(0.0f, dot(V,R));
+
+        float cos_V_R = max(0.0f, dot(V,R));
+
+        Ip = Ip + Il * Io * kd * pow(cos_V_R, m);
 
         // cout << Ip.y << endl;
  
