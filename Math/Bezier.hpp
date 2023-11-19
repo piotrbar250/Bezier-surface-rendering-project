@@ -12,11 +12,17 @@ class Bezier
 {
 public:
     float Z[4][4];
-    int prepZ[4][4] = {
+    int prepZ2[4][4] = {
         {0, 0, 0, 0},
         {0, 1, 1, 0},
         {0, 1, 1, 0},
         {0, 0, 0, 0}
+        };
+    int prepZ[4][4] = {
+        {1, 0, 0, 1},
+        {0, 0, 0, 0},
+        {0, 0, 0, 0},
+        {1, 0, 0, 1}
         };
     /*
         prepZ visualizes control points

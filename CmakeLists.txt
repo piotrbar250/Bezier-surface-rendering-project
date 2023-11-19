@@ -1,9 +1,40 @@
-cmake_minimum_required(VERSION 3.10)
-project(program)
+# cmake_minimum_required(VERSION 3.10)
+# project(program)
+
+# set(CMAKE_CXX_STANDARD 17)
+
+# find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
+
+# add_executable(program main.cpp Bezier.hpp Math.hpp Bitmap.hpp FramePixelProcessor.hpp Renderer/PixelRenderer.hpp Renderer/GreenShadesPixelRenderer.hpp Renderer/HeatMapPixelRenderer.hpp global.hpp FrameRateCalculator.hpp LightSource.hpp PhongReflectionProcessor.hpp)
+
+# target_include_directories(program PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Renderer)
+
+# target_link_libraries(program sfml-graphics sfml-window sfml-system)
+
+# cmake_minimum_required(VERSION 3.10)
+# project(program)
 
 set(CMAKE_CXX_STANDARD 17)
 
+# Find SFML package
 find_package(SFML 2.6 COMPONENTS graphics window system REQUIRED)
 
-add_executable(program main.cpp Bezier.hpp Math.hpp Bitmap.hpp FramePixelProcessor.hpp PixelRenderer.hpp GreenShadesPixelRenderer.hpp HeatMapPixelRenderer.hpp global.hpp FrameRateCalculator.hpp LightSource.hpp PhongReflectionProcessor.hpp)
+# List of source files for your executable
+add_executable(program 
+    main.cpp
+    # Add other .cpp files here, including those in the Renderer subdirectory
+)
+
+
+# Include directories for your header files
+target_include_directories(program PRIVATE 
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/Global
+    ${CMAKE_CURRENT_SOURCE_DIR}/Math
+    ${CMAKE_CURRENT_SOURCE_DIR}/Renderer
+    ${CMAKE_CURRENT_SOURCE_DIR}/Light
+    ${CMAKE_CURRENT_SOURCE_DIR}/Other
+)
+
+# Link SFML libraries
 target_link_libraries(program sfml-graphics sfml-window sfml-system)

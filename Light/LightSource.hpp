@@ -12,6 +12,8 @@ public:
     float x,y,z;
     float radius;
     float angle;
+    Point3d vector;
+
     LightSource() : LightSource(0.5) {}
 
     LightSource(float z ) : originX(W/2), originY(H/2), z(z), radius(450), angle(-0.05f){}
@@ -20,10 +22,12 @@ public:
     {
         x = radius * cos(angle) + originX;
         y = radius * sin(angle) + originY;
+
+        vector = {x / float(W), y / float(H), z};
     }
 
     void nextFrame()
     {
-        angle += 0.05f;
+        angle += 0.01f;
     }
 };

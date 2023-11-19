@@ -3,8 +3,8 @@
 #include "Bezier.hpp"
 #include "Math.hpp"
 #include "global.hpp"
-#include "HeatMapPixelRenderer.hpp"
-#include "PixelRenderer.hpp"
+#include "Renderer/HeatMapPixelRenderer.hpp"
+#include "Renderer/PixelRenderer.hpp"
 #include "GreenShadesPixelRenderer.hpp"
 #include "FramePixelProcessor.hpp"
 #include "Bitmap.hpp"
@@ -20,11 +20,8 @@ Bitmap bitmap;
 
 int main()
 {
-    // Bezier bez;
-    // cout << bez.B(0, 2, 0.75) << endl;
-    // return 0;
     window.create(VideoMode(W, H), "Bezier surface");
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(70);
     FrameRateCalculator frameRateCalculator;
     Bezier bezier;
     PixelRenderer* renderer;
@@ -49,7 +46,6 @@ int main()
         
         frameRateCalculator.update();
         
-       
         window.clear(Color::Black);
 
         lightSource.nextFrame();
@@ -65,3 +61,4 @@ int main()
 
     return 0;
 }
+

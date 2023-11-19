@@ -8,8 +8,8 @@ const int W = 1000, H = 1000;
 class Bitmap
 {
 public:
-    // this represents points in the cartesian system
 
+    // this represents points in the cartesian system
     /*
     These are points stored in the Bitmap
     03 13 23 33
@@ -20,6 +20,15 @@ public:
 
     float height[W][H];
     Color color[W][H];
+    float xPoints[W], yPoints[H]; 
+    Math::Point3d N[W][H];
 
-    Bitmap() {}
+    Bitmap()
+    {
+        for(int i = 0; i < W; i++)
+            xPoints[i] = float(i) / W;        
+            
+        for(int i = 0; i < H; i++)
+            yPoints[i] = float(i) / H;
+    }
 };
