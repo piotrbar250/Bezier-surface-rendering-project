@@ -23,6 +23,10 @@ int main()
 {
     window.create(VideoMode(W, H), "Bezier surface");
     window.setFramerateLimit(70);
+
+    RectangleShape background(Vector2f(W+300, H));
+    background.setFillColor(Color::White);
+
     FrameRateCalculator frameRateCalculator;
     Bezier bezier;
     PixelRenderer* renderer;
@@ -45,20 +49,21 @@ int main()
                 window.close();
         }
         
-        // frameRateCalculator.update();
+        frameRateCalculator.update();
         
         window.clear(Color::Black);
+        // window.draw(background);
 
-        // lightSource.nextFrame();
-        // lightSource.adjustPosition();
+        lightSource.nextFrame();
+        lightSource.adjustPosition();
 
         // // if(true) // here goes a condtition for changing control points
         // //     setHeights();
-        // fpp.calculateColors();
+        fpp.calculateColors();
         
-        // renderer->draw();
+        renderer->draw();
 
-        PolygonFilling::drawPolygon();
+        // PolygonFilling::drawPolygon();
 
         window.display();
         // return 0;

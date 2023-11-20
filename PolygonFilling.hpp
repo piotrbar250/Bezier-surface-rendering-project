@@ -255,18 +255,18 @@ public:
 
     static void drawPolygon()
     {
-        // vector<Point> polygon = {
-        //     {100, 400}, {500, 400}, {200, 900} 
-        // };
+        vector<Point> polygon = {
+            {100,100}, {200, 50}, {300, 120}, {500, 500}, {300, 300}, {150, 250}, {200, 120}
+        };
 
         // vector<Point> polygon = {
         //     {50, 20}, {300, 500}
         // };
 
         //:((()))
-        vector<Point> polygon = {
-            {100, 100}, {150, 300}, {120, 400}
-        };
+        // vector<Point> polygon = {
+        //     {100, 100}, {150, 300}, {120, 400}
+        // };
 
         // vector<Point> polygon = {
         //     {100, 100}, {400, 100}, {100, 400}
@@ -290,10 +290,11 @@ public:
         //     {100, 100}, {300, 100}, {300, 300}, {100, 300}
         // };
 
+
         vector<Vertex> pixels = fill(polygon);
 
         for (auto &v : pixels)
-            v.color = Color::Green;
+            v.color = Color::Yellow;
 
         window.draw(&pixels[0], pixels.size(), sf::Points);
     }
