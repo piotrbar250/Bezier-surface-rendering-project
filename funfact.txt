@@ -1,0 +1,25 @@
+    void insert(Node*& head, Segment& s)
+    {
+        if(head == nullptr)
+        {
+            head = new Node;
+            head->s = s;
+            next = nullptr;
+            return;
+        }
+        
+        Node** ptr = &head;
+
+        while(*ptr)
+        {
+            if(s.x < (*ptr)->s.x)
+                break;
+            else
+                ptr = &((*ptr)->next);
+        }
+        
+        Node* newNode = new Node;
+        newNode->s = s;
+        newNode->next = (*ptr);
+        ptr = &newNode;
+    }

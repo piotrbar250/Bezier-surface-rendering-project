@@ -11,6 +11,7 @@
 #include "FrameRateCalculator.hpp"
 #include <iostream>
 #include <string>
+#include "PolygonFilling.hpp"
 
 using namespace std;
 using namespace sf;
@@ -44,19 +45,23 @@ int main()
                 window.close();
         }
         
-        frameRateCalculator.update();
+        // frameRateCalculator.update();
         
         window.clear(Color::Black);
 
-        lightSource.nextFrame();
-        lightSource.adjustPosition();
+        // lightSource.nextFrame();
+        // lightSource.adjustPosition();
 
-        // if(true) // here goes a condtition for changing control points
-        //     setHeights();
-        fpp.calculateColors();
+        // // if(true) // here goes a condtition for changing control points
+        // //     setHeights();
+        // fpp.calculateColors();
         
-        renderer->draw();
+        // renderer->draw();
+
+        PolygonFilling::drawPolygon();
+
         window.display();
+        // return 0;
     }
 
     return 0;
