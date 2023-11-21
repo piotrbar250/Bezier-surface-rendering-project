@@ -28,6 +28,6 @@ public:
 
     void nextFrame()
     {
-        angle += 0.01f;
+        angle += 0.02f;
     }
 };

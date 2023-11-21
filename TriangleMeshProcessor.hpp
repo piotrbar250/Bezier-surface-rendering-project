@@ -35,12 +35,11 @@ public:
     {
         triangleXs = triangleYs = vector<int>();
         bottomTriangles = topTriangles = vector<Triangle>();
-        topTrianglesPoints = bottomTrianglesPoints = vector<vector<Point>>(meshSize);
-        topTrianglesPoints = vector<vector<Point>>(meshSize);
+        topTrianglesPoints = bottomTrianglesPoints = vector<vector<Point>>(meshSize/2);
         allVertices = vector<Point>();
         allPoints = vector<Point>();
     }
-    
+
     void initializeMeshStructure(int _meshDensityX, int _meshDensityY)
     {
         /*
@@ -70,8 +69,8 @@ public:
         
         // modDisX--;
         // modDisY--;
-        int modDisX = disX - 1;
-        int modDisY = disY - 1;
+        int modDisX = disX-1;
+        int modDisY = disY-1;
 
         int lastX = triangleXs.back();
         int lastY = triangleYs.back();
@@ -113,6 +112,8 @@ public:
         {
             topTrianglesPoints[index++] = PolygonInterior::getInteriorPoints({t.a, t.b, t.c});
         }
+
+       
     }
 
     void processFrame(bool bezierChanged, bool meshChanged, int _meshDensityX = -1, int _meshDensityY = -1)
@@ -130,86 +131,139 @@ public:
 
     void calculateNormalVectors()
     {
-        for (Point point : allPoints)
-        {
-            int x = point.x;
-            int y = point.y;
-            bitmap.N[x][y] = cross(bezier.tangentX(bitmap.xPoints[x], bitmap.yPoints[y]),
-                                   bezier.tangentY(bitmap.xPoints[x], bitmap.yPoints[y]))
-                                 .normalized();
-        }
-
-        // for (Triangle t : topTriangles)
+        // for (Point point : allPoints)
         // {
-        //     vector<Point> points = PolygonInterior::getInteriorPoints({t.a, t.b, t.c});
-
-        //     vector<Vertex> pixels;
-        //     for(Point p: points)
-        //     {
-        //         // cout << "halo " << p.x << " "<< p.y << endl;
-        //         pixels.push_back(Vector2f(p.x, H - p.y));
-        //     }
-
-        //     for (auto &v : pixels)
-        //         v.color = Color::Yellow;
-
-        //     cout << pixels.size() << endl;
-        //     window.draw(&pixels[0], pixels.size(), sf::Points);
+        //     int x = point.x;
+        //     int y = point.y;
+        //     bitmap.N[x][y] = cross(bezier.tangentX(bitmap.xPoints[x], bitmap.yPoints[y]),
+        //                            bezier.tangentY(bitmap.xPoints[x], bitmap.yPoints[y]))
+        //                          .normalized();
+            
         // }
 
-        for (vector<Point> vp : bottomTrianglesPoints)
+        int x, y;
+        for(Triangle t: topTriangles)
         {
-            for (Point p : vp)
+            float tx[] = {t.a.x, t.b.x, t.c.x};
+            float ty[] = {t.b.y, t.b.y, t.c.y};
+
+            for(int i = 0; i < 3; i++) 
             {
-                int x = p.x;
-                int y = p.y;
+                x = tx[i];
+                y = ty[i];
                 bitmap.N[x][y] = cross(bezier.tangentX(bitmap.xPoints[x], bitmap.yPoints[y]),
-                                       bezier.tangentY(bitmap.xPoints[x], bitmap.yPoints[y]))
-                                     .normalized();
+                                    bezier.tangentY(bitmap.xPoints[x], bitmap.yPoints[y]))
+                                    .normalized();
+
+                bitmap.height[x][y] = bezier.z(bitmap.xPoints[x], bitmap.yPoints[y]);
             }
         }
 
+        for(Triangle t: bottomTriangles)
+        {
+            float tx[] = {t.a.x, t.b.x, t.c.x};
+            float ty[] = {t.b.y, t.b.y, t.c.y};
+
+            for(int i = 0; i < 3; i++) 
+            {
+                x = tx[i];
+                y = ty[i];
+                bitmap.N[x][y] = cross(bezier.tangentX(bitmap.xPoints[x], bitmap.yPoints[y]),
+                                    bezier.tangentY(bitmap.xPoints[x], bitmap.yPoints[y]))
+                                    .normalized();
+                bitmap.height[x][y] = bezier.z(bitmap.xPoints[x], bitmap.yPoints[y]);
+            }
+        }
+    
+
+        int index = 0;
         for (vector<Point> vp : topTrianglesPoints)
         {
+            Triangle t = topTriangles[index];
+            float abcArea = area(t.a, t.b, t.c);
+            
+            // cout << int(t.b.x) << " " << int(t.b.y) << endl;
+
             for (Point p : vp)
             {
+                float abpArea = area(t.a, t.b, p);
+                float acpArea = area(t.a, t.c, p);
+                float bcpArea = area(t.b, t.c, p);
+
+                float alfa =  bcpArea / abcArea;
+                float beta = acpArea / abcArea;
+                float gamma = abpArea / abcArea;
+                
+                // cout << alfa << " " << beta << " " << gamma << endl;
+                // cout << alfa + beta + gamma << endl << endl;
+                
+       
                 int x = p.x;
                 int y = p.y;
-                bitmap.N[x][y] = cross(bezier.tangentX(bitmap.xPoints[x], bitmap.yPoints[y]),
-                                       bezier.tangentY(bitmap.xPoints[x], bitmap.yPoints[y]))
-                                     .normalized();
+               
+                bitmap.N[x][y] = bitmap.N[int(t.a.x)][int(t.a.y)] * alfa + bitmap.N[int(t.b.x)][int(t.b.y)] * beta + bitmap.N[int(t.c.x)][int(t.c.y)] * gamma;
+                bitmap.height[x][y] = bitmap.height[int(t.a.x)][int(t.a.y)] * alfa + bitmap.height[int(t.b.x)][int(t.b.y)] * beta + bitmap.height[int(t.c.x)][int(t.c.y)] * gamma;
             }
+            index++;
+        }
+
+
+        index = 0;        
+        for (vector<Point> vp : bottomTrianglesPoints)
+        {
+            Triangle t = bottomTriangles[index];
+            float abcArea = area(t.a, t.b, t.c);
+            for (Point p : vp)
+            {
+                float abpArea = area(t.a, t.b, p);
+                float acpArea = area(t.a, t.c, p);
+                float bcpArea = area(t.b, t.c, p);
+
+                float alfa =  bcpArea / abcArea;
+                float beta = acpArea / abcArea;
+                float gamma = abpArea / abcArea;
+                
+                // cout << alfa << " " << beta << " " << gamma << endl;
+                // cout << alfa + beta + gamma << endl << endl;
+                
+
+                int x = p.x;
+                int y = p.y;
+                bitmap.N[x][y] = bitmap.N[int(t.a.x)][int(t.a.y)] * alfa + bitmap.N[int(t.b.x)][int(t.b.y)] * beta + bitmap.N[int(t.c.x)][int(t.c.y)] * gamma;
+                bitmap.height[x][y] = bitmap.height[int(t.a.x)][int(t.a.y)] * alfa + bitmap.height[int(t.b.x)][int(t.b.y)] * beta + bitmap.height[int(t.c.x)][int(t.c.y)] * gamma;
+            }
+            index++;
         }
     }
 
     void calculateHeights()
     {
-        for (Point point : allPoints)
-        {
-            int x = point.x;
-            int y = point.y;
-            bitmap.height[x][y] = bezier.z(bitmap.xPoints[x], bitmap.yPoints[y]);
-        }
+        // for (Point point : allPoints)
+        // {
+        //     int x = point.x;
+        //     int y = point.y;
+        //     bitmap.height[x][y] = bezier.z(bitmap.xPoints[x], bitmap.yPoints[y]);
+        // }
 
-        for (vector<Point> vp : bottomTrianglesPoints)
-        {
-            for (Point p : vp)
-            {
-                int x = p.x;
-                int y = p.y;
-                bitmap.height[x][y] = bezier.z(bitmap.xPoints[x], bitmap.yPoints[y]);
-            }
-        }
+        // for (vector<Point> vp : bottomTrianglesPoints)
+        // {
+        //     for (Point p : vp)
+        //     {
+        //         int x = p.x;
+        //         int y = p.y;
+        //         bitmap.height[x][y] = bezier.z(bitmap.xPoints[x], bitmap.yPoints[y]);
+        //     }
+        // }
         
-        for (vector<Point> vp : topTrianglesPoints)
-        {
-            for (Point p : vp)
-            {
-                int x = p.x;
-                int y = p.y;
-                bitmap.height[x][y] = bezier.z(bitmap.xPoints[x], bitmap.yPoints[y]);
-            }
-        }
+        // for (vector<Point> vp : topTrianglesPoints)
+        // {
+        //     for (Point p : vp)
+        //     {
+        //         int x = p.x;
+        //         int y = p.y;
+        //         bitmap.height[x][y] = bezier.z(bitmap.xPoints[x], bitmap.yPoints[y]);
+        //     }
+        // }
     }
 
     void calculateColors()
@@ -240,57 +294,5 @@ public:
                 bitmap.color[x][y] = prp.computePixelColor(x, y);
             }
         }
-
     }
-    // void gpu()
-    // {
-    //     int cnt = meshDensityX * meshDensityY;
-    //     VertexArray gpuBottomTriangles(sf::Triangles, cnt * 3);
-    //     VertexArray gpuTopTriangles(sf::Triangles, cnt * 3);
-
-    //     int index = 0;
-    //     for (float x : triangleXs)
-    //     {
-    //         for (float y : triangleYs)
-    //         {
-    //             allPoints.push_back({x, y});
-
-    //             allVertices.push_back({x, y});
-    //             allVertices.push_back({x + modDisX, y});
-    //             allVertices.push_back({x + modDisX, y + modDisY});
-
-    //             bottomTriangles.push_back(Triangle({x, y}, {x + modDisX, y}, {x + modDisX, y + modDisY}));
-
-    //             gpuBottomTriangles[index].color = Color::Red;
-    //             gpuBottomTriangles[index++].position = {x, H - y};
-
-    //             gpuBottomTriangles[index].color = Color::Green;
-    //             gpuBottomTriangles[index++].position = {x + modDisX, H - y};
-
-    //             gpuBottomTriangles[index].color = Color::Blue;
-    //             gpuBottomTriangles[index++].position = {x + modDisX, H - (y + modDisY)};
-    //         }
-    //     }
-
-    //     index = 0;
-    //     for (float x : triangleXs)
-    //     {
-    //         for (float y : triangleYs)
-    //         {
-    //             allVertices.push_back({x, y});
-    //             allVertices.push_back({x, y + modDisY});
-    //             allVertices.push_back({x + modDisX, y + modDisY});
-    //             topTriangles.push_back(Triangle({x, y}, {x, y + modDisY}, {x + modDisX, y + modDisY}));
-
-    //             gpuTopTriangles[index].color = Color::Cyan;
-    //             gpuTopTriangles[index++].position = {x, H - y};
-
-    //             gpuTopTriangles[index].color = Color::Yellow;
-    //             gpuTopTriangles[index++].position = {x, H - (y + modDisY)};
-
-    //             gpuTopTriangles[index].color = Color::Magenta;
-    //             gpuTopTriangles[index++].position = {x + modDisX, H - (y + modDisY)};
-    //         }
-    //     }
-    // }
 };

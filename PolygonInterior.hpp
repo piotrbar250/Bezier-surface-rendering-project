@@ -4,6 +4,7 @@
 #include <vector>
 #include "Bitmap.hpp"
 #include "global.hpp"
+#include <cmath>
 
 using namespace std;
 using namespace sf;
@@ -17,6 +18,12 @@ struct Point
     bool operator==(const Point &p)
     {
         return x == p.x && y == p.y;
+    }
+    
+    friend float area(const Point& a, const Point& b, const Point& c)
+    {   
+        float det = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
+        return fabs(det) / 2.0f;
     }
 };
 

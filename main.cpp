@@ -42,7 +42,7 @@ int main()
 
     fpp.calculateHeights();
     // tmp.initializeMeshStructure(5, 7);
-    tmp.processFrame(true, true, 40, 40);
+    // tmp.processFrame(true, true, 100, 100);
 
     while (window.isOpen())
     {
@@ -63,9 +63,9 @@ int main()
 
         // // if(true) // here goes a condtition for changing control points
         // //     setHeights();
-        // fpp.calculateColors();
+        fpp.calculateColors();
 
-        tmp.processFrame(false, false);
+        // tmp.processFrame(false, false);
 
         renderer->draw();
 
