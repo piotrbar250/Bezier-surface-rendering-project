@@ -5,6 +5,7 @@
 #include "global.hpp"
 #include "Bitmap.hpp"
 #include "PhongReflectionProcessor.hpp"
+
 class FramePixelProcessor
 {
 public:

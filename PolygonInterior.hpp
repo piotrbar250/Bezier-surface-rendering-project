@@ -112,13 +112,14 @@ struct Node
     }
 };
 
-class PolygonFilling
+class PolygonInterior
 {
 public:
-    static vector<Vertex> fill(vector<Point> vertexes) // vertexes describe the Polygon, we assume it doesnt have any self-intersections
+    static vector<Point> getInteriorPoints(vector<Point> vertexes) // vertexes describe the Polygon, we assume it doesnt have any self-intersections
     {
 
-        vector<Vertex> pixels = vector<Vertex>();
+        vector<Vertex> pixels;
+        vector<Point> points;
 
         vector<Segment> buckets[H];
         int buckets_y_min = H;
@@ -173,7 +174,7 @@ public:
             else
                 s.mInv = float(x_t - x_b) / float(y_t - y_b);
 
-            cout << s << endl << endl;
+            // cout << s << endl << endl;
 
             // Bucket sort
             buckets[int(y_b)].push_back(s);
@@ -183,28 +184,28 @@ public:
         // AET list
         Node *head = nullptr;
 
-        for(int i = 0; i < H; i++)
-        {
-            if(buckets[i].size() > 0)
-            {
-                cout << "bucket nr " << i << " ";
-                for(Segment s: buckets[i])
-                    cout << s << endl;
+        // for(int i = 0; i < H; i++)
+        // {
+        //     if(buckets[i].size() > 0)
+        //     {
+        //         // cout << "bucket nr " << i << " ";
+        //         for(Segment s: buckets[i])
+        //             // cout << s << endl;
                 
-                cout << endl << endl << endl;
-            }
-        }
+        //         // cout << endl << endl << endl;
+        //     }
+        // }
 
         while (buckets_total_size > 0 || head)
         {
-            cout << "zaczynam wstawiac" << endl;
+            // cout << "zaczynam wstawiac" << endl;
             for (auto &s : buckets[buckets_y_min])
             {
-                cout << "wstawiam s do bucketa " << s << endl << endl;
+                // cout << "wstawiam s do bucketa " << s << endl << endl;
                 Node::insert(head, s);
 
             }
-            cout << "skonczylem wstawiac" << endl << endl;
+            // cout << "skonczylem wstawiac" << endl << endl;
             buckets_total_size -= buckets[buckets_y_min].size();
             buckets[buckets_y_min].clear();
 
@@ -214,6 +215,7 @@ public:
                 // cout << "current: " << current->s << endl << endl;
                 Segment s_current(current->s);
                 pixels.push_back(Vector2f(s_current.x, H - buckets_y_min));
+                points.push_back({s_current.x, float(buckets_y_min)});
                 if(!current->next)
                 {
                     // cout << "petla sie nie odpali dla y " << buckets_y_min << endl << endl;
@@ -225,7 +227,11 @@ public:
                     Segment s_next(current->next->s);
                     // cout << "rysuje miedzy pikslami " << s_current.x +1 << " " << s_next.x << " na y " << buckets_y_min << endl << endl;
                     for (int x = s_current.x + 1; x < s_next.x; x++)
+                    {
                         pixels.push_back(Vector2f(x, H - buckets_y_min));
+                        points.push_back({float(x), float(buckets_y_min)});
+                    }
+                        
                     s_current = s_next;
                     current = current->next;
                 }
@@ -250,7 +256,8 @@ public:
 
             Node::apply(head, updateX);
         }
-        return pixels;
+        // return pixels;
+        return points;
     }
 
     static void drawPolygon()
@@ -291,12 +298,12 @@ public:
         // };
 
 
-        vector<Vertex> pixels = fill(polygon);
+        // vector<Vertex> pixels = getInteriorPoints(polygon);
 
-        for (auto &v : pixels)
-            v.color = Color::Yellow;
+        // for (auto &v : pixels)
+        //     v.color = Color::Yellow;
 
-        window.draw(&pixels[0], pixels.size(), sf::Points);
+        // window.draw(&pixels[0], pixels.size(), sf::Points);
     }
 };
 

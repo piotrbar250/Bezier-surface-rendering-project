@@ -11,7 +11,8 @@
 #include "FrameRateCalculator.hpp"
 #include <iostream>
 #include <string>
-#include "PolygonFilling.hpp"
+#include "PolygonInterior.hpp"
+#include "TriangleMeshProcessor.hpp"
 
 using namespace std;
 using namespace sf;
@@ -22,7 +23,7 @@ Bitmap bitmap;
 int main()
 {
     window.create(VideoMode(W, H), "Bezier surface");
-    window.setFramerateLimit(70);
+    window.setFramerateLimit(110);
 
     RectangleShape background(Vector2f(W+300, H));
     background.setFillColor(Color::White);
@@ -30,15 +31,18 @@ int main()
     FrameRateCalculator frameRateCalculator;
     Bezier bezier;
     PixelRenderer* renderer;
-    
+
     LightSource lightSource;
     PhongReflectionProcessor prp(bezier, lightSource);
     FramePixelProcessor fpp(bezier, prp);
+    TriangleMeshProcessor tmp(bezier, prp);
 
     // renderer = new GreenShadesPixelRenderer(bezier, lightSource);
     renderer = new PixelRenderer(bezier, lightSource);
 
     fpp.calculateHeights();
+    // tmp.initializeMeshStructure(5, 7);
+    tmp.processFrame(true, true, 5,7);
 
     while (window.isOpen())
     {
@@ -48,9 +52,9 @@ int main()
             if (event.type == Event::Closed)
                 window.close();
         }
-        
+
         frameRateCalculator.update();
-        
+
         window.clear(Color::Black);
         // window.draw(background);
 
@@ -59,11 +63,15 @@ int main()
 
         // // if(true) // here goes a condtition for changing control points
         // //     setHeights();
-        fpp.calculateColors();
-        
+        // fpp.calculateColors();
+
+        tmp.processFrame(false, false);
+
         renderer->draw();
 
         // PolygonFilling::drawPolygon();
+
+        // tmp.initializeMeshStructure(5, 7);
 
         window.display();
         // return 0;

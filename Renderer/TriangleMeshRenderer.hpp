@@ -1,0 +1,5 @@
+class TriangleMeshRenderer
+{
+public:
+    TriangleMeshRenderer() {}
+};
