@@ -40,9 +40,18 @@ public:
         allVertices = vector<Point>();
         allPoints = vector<Point>();
     }
-
+    
     void initializeMeshStructure(int _meshDensityX, int _meshDensityY)
     {
+        /*
+        W - screen width = 1000
+        H - screen width = 100
+        for chat GPT
+            when _meshDensityX = 4 and _meshDensityY = 4 everything is being drawn correctly
+            but there 4 empty single pixel columns every 250 pixels
+
+        */
+
         meshDensityX = _meshDensityX;
         meshDensityY = _meshDensityY;
         meshSize = 2 * meshDensityX * meshDensityY;
@@ -58,6 +67,14 @@ public:
         disY = H / meshDensityY;
         for (int i = 1; i < meshDensityY; i++)
             triangleYs.push_back(triangleYs.back() + disY);
+        
+        // modDisX--;
+        // modDisY--;
+        int modDisX = disX - 1;
+        int modDisY = disY - 1;
+
+        int lastX = triangleXs.back();
+        int lastY = triangleYs.back();
 
         for (float x : triangleXs)
         {
@@ -66,10 +83,10 @@ public:
                 allPoints.push_back({x, y});
 
                 allVertices.push_back({x, y});
-                allVertices.push_back({x + disX, y});
-                allVertices.push_back({x + disX, y + disY});
+                allVertices.push_back({x + modDisX, y});
+                allVertices.push_back({x + modDisX, y + modDisY});
 
-                bottomTriangles.push_back(Triangle({x, y}, {x + disX, y}, {x + disX, y + disY}));
+                bottomTriangles.push_back(Triangle({x, y}, {x + modDisX, y}, {x + modDisX, y + modDisY}));
             }
         }
 
@@ -78,10 +95,10 @@ public:
             for (float y : triangleYs)
             {
                 allVertices.push_back({x, y});
-                allVertices.push_back({x, y + disY});
-                allVertices.push_back({x + disX, y + disY});
+                allVertices.push_back({x, y + modDisY});
+                allVertices.push_back({x + modDisX, y + modDisY});
 
-                topTriangles.push_back(Triangle({x, y}, {x, y + disY}, {x + disX, y + disY}));
+                topTriangles.push_back(Triangle({x, y}, {x, y + modDisY}, {x + modDisX, y + modDisY}));
             }
         }
 
@@ -225,55 +242,55 @@ public:
         }
 
     }
-    void gpu()
-    {
-        int cnt = meshDensityX * meshDensityY;
-        VertexArray gpuBottomTriangles(sf::Triangles, cnt * 3);
-        VertexArray gpuTopTriangles(sf::Triangles, cnt * 3);
+    // void gpu()
+    // {
+    //     int cnt = meshDensityX * meshDensityY;
+    //     VertexArray gpuBottomTriangles(sf::Triangles, cnt * 3);
+    //     VertexArray gpuTopTriangles(sf::Triangles, cnt * 3);
 
-        int index = 0;
-        for (float x : triangleXs)
-        {
-            for (float y : triangleYs)
-            {
-                allPoints.push_back({x, y});
+    //     int index = 0;
+    //     for (float x : triangleXs)
+    //     {
+    //         for (float y : triangleYs)
+    //         {
+    //             allPoints.push_back({x, y});
 
-                allVertices.push_back({x, y});
-                allVertices.push_back({x + disX, y});
-                allVertices.push_back({x + disX, y + disY});
+    //             allVertices.push_back({x, y});
+    //             allVertices.push_back({x + modDisX, y});
+    //             allVertices.push_back({x + modDisX, y + modDisY});
 
-                bottomTriangles.push_back(Triangle({x, y}, {x + disX, y}, {x + disX, y + disY}));
+    //             bottomTriangles.push_back(Triangle({x, y}, {x + modDisX, y}, {x + modDisX, y + modDisY}));
 
-                gpuBottomTriangles[index].color = Color::Red;
-                gpuBottomTriangles[index++].position = {x, H - y};
+    //             gpuBottomTriangles[index].color = Color::Red;
+    //             gpuBottomTriangles[index++].position = {x, H - y};
 
-                gpuBottomTriangles[index].color = Color::Green;
-                gpuBottomTriangles[index++].position = {x + disX, H - y};
+    //             gpuBottomTriangles[index].color = Color::Green;
+    //             gpuBottomTriangles[index++].position = {x + modDisX, H - y};
 
-                gpuBottomTriangles[index].color = Color::Blue;
-                gpuBottomTriangles[index++].position = {x + disX, H - (y + disY)};
-            }
-        }
+    //             gpuBottomTriangles[index].color = Color::Blue;
+    //             gpuBottomTriangles[index++].position = {x + modDisX, H - (y + modDisY)};
+    //         }
+    //     }
 
-        index = 0;
-        for (float x : triangleXs)
-        {
-            for (float y : triangleYs)
-            {
-                allVertices.push_back({x, y});
-                allVertices.push_back({x, y + disY});
-                allVertices.push_back({x + disX, y + disY});
-                topTriangles.push_back(Triangle({x, y}, {x, y + disY}, {x + disX, y + disY}));
+    //     index = 0;
+    //     for (float x : triangleXs)
+    //     {
+    //         for (float y : triangleYs)
+    //         {
+    //             allVertices.push_back({x, y});
+    //             allVertices.push_back({x, y + modDisY});
+    //             allVertices.push_back({x + modDisX, y + modDisY});
+    //             topTriangles.push_back(Triangle({x, y}, {x, y + modDisY}, {x + modDisX, y + modDisY}));
 
-                gpuTopTriangles[index].color = Color::Cyan;
-                gpuTopTriangles[index++].position = {x, H - y};
+    //             gpuTopTriangles[index].color = Color::Cyan;
+    //             gpuTopTriangles[index++].position = {x, H - y};
 
-                gpuTopTriangles[index].color = Color::Yellow;
-                gpuTopTriangles[index++].position = {x, H - (y + disY)};
+    //             gpuTopTriangles[index].color = Color::Yellow;
+    //             gpuTopTriangles[index++].position = {x, H - (y + modDisY)};
 
-                gpuTopTriangles[index].color = Color::Magenta;
-                gpuTopTriangles[index++].position = {x + disX, H - (y + disY)};
-            }
-        }
-    }
+    //             gpuTopTriangles[index].color = Color::Magenta;
+    //             gpuTopTriangles[index++].position = {x + modDisX, H - (y + modDisY)};
+    //         }
+    //     }
+    // }
 };

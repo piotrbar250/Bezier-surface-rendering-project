@@ -42,7 +42,7 @@ int main()
 
     fpp.calculateHeights();
     // tmp.initializeMeshStructure(5, 7);
-    tmp.processFrame(true, true, 5,7);
+    tmp.processFrame(true, true, 40, 40);
 
     while (window.isOpen())
     {

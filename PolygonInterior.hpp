@@ -226,12 +226,12 @@ public:
                     // cout << "current_next: " << current->next->s << endl << endl;
                     Segment s_next(current->next->s);
                     // cout << "rysuje miedzy pikslami " << s_current.x +1 << " " << s_next.x << " na y " << buckets_y_min << endl << endl;
-                    for (int x = s_current.x + 1; x < s_next.x; x++)
+                    for (int x = s_current.x+1; x <= s_next.x; x++)
                     {
                         pixels.push_back(Vector2f(x, H - buckets_y_min));
                         points.push_back({float(x), float(buckets_y_min)});
                     }
-                        
+
                     s_current = s_next;
                     current = current->next;
                 }
