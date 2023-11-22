@@ -19,6 +19,8 @@
 #include "Slider.hpp"
 #include "ControlPointsUI.hpp"
 #include "NormalmapButton.hpp"
+#include "BackgroundButton.hpp"
+
 using namespace std;
 using namespace sf;
 
@@ -33,12 +35,18 @@ void myfunction_on()
 void myfunction_off()
 {
     cout << "Button turned off!" << endl;
+
 }
 
 int main()
 {
     window.create(VideoMode(W+300, H), "Bezier surface");
     window.setFramerateLimit(110);
+
+
+    sf::View normalView(sf::FloatRect(0, 0, W+300, H));
+    sf::View shrunkView(sf::FloatRect(0, 0, W, H)); // smaller width
+    bool isShrunk = false;
 
     RectangleShape background(Vector2f(W+300, H));
     background.setFillColor(Color::White);
@@ -63,7 +71,11 @@ int main()
     Slider slider2(150);
 
     NormalmapButton normalmapButton(window, myfunction_on, myfunction_off, triangleMeshProcessor);
-    
+
+    Vector2f normalmapButtonPos(window.getSize().x - 100 - 30, window.getSize().y - 50 - 10);
+
+    BackgroundButton backgroundButton(window, myfunction_on, myfunction_off, normalmapButtonPos);
+
     while (window.isOpen())
     {
         Event event;
@@ -71,11 +83,26 @@ int main()
         {
             if (event.type == Event::Closed)
                 window.close();
-                
             slider.handleEvent(event);
             slider2.handleEvent(event);
             controlPoints.handleEvent(event);
             normalmapButton.handleEvent(event, window);
+            backgroundButton.handleEvent(event, window);
+
+            if (event.type == sf::Event::KeyPressed) {
+                if (event.key.code == sf::Keyboard::H) {
+                    if (!isShrunk) {
+                        window.setView(shrunkView); // Set the cropped view
+                        window.setSize(sf::Vector2u(W, H)); // Resize window
+                        isShrunk = true;
+                    } else {
+                        window.setView(normalView); // Set the normal view
+                        window.setSize(sf::Vector2u(W+300, H)); // Resize window back to original size
+                        isShrunk = false;
+                    }
+                }
+            }
+            
         }
 
         // frameRateCalculator.update();
@@ -96,7 +123,7 @@ int main()
         
         slider2.handleEvent(event);
         normalmapButton.draw(window);
-
+        backgroundButton.draw(window);
         window.display();
     }
 
