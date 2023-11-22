@@ -1,33 +1,4 @@
-    void insert(Node*& head, Segment& s)
-    {
-        if(head == nullptr)
-        {
-            head = new Node;
-            head->s = s;
-            next = nullptr;
-            return;
-        }
-        
-        Node** ptr = &head;
-
-        while(*ptr)
-        {
-            if(s.x < (*ptr)->s.x)
-                break;
-            else
-                ptr = &((*ptr)->next);
-        }
-        
-        Node* newNode = new Node;
-        newNode->s = s;
-        newNode->next = (*ptr);
-        ptr = &newNode;
-    }
-
-
-
-
-    #pragma once
+#pragma once
 #include <SFML/Graphics.hpp>
 #include "Bezier.hpp"
 #include "Math.hpp"
@@ -35,6 +6,7 @@
 #include "Bitmap.hpp"
 #include "PhongReflectionProcessor.hpp"
 #include "PolygonInterior.hpp"
+#include "NormalmapProcessor.hpp"
 
 class TriangleMeshProcessor
 {
@@ -60,6 +32,19 @@ public:
 
     TriangleMeshProcessor(Bezier &bezier, PhongReflectionProcessor &prp) : bezier(bezier), prp(prp) {}
 
+    void processFrame(bool bezierChanged, bool meshChanged, int _meshDensityX = -1, int _meshDensityY = -1)
+    {
+        if (meshChanged)
+            initializeMeshStructure(_meshDensityX, _meshDensityY);
+
+        if (bezierChanged || meshChanged)
+        {
+            computeSurface();
+            NormalmapProcessor::apply();
+        }
+        computeColors();
+    }
+
     void initializeStructures()
     {
         triangleXs = triangleYs = vector<int>();
@@ -71,15 +56,6 @@ public:
 
     void initializeMeshStructure(int _meshDensityX, int _meshDensityY)
     {
-        /*
-        W - screen width = 1000
-        H - screen width = 100
-        for chat GPT
-            when _meshDensityX = 4 and _meshDensityY = 4 everything is being drawn correctly
-            but there 4 empty single pixel columns every 250 pixels
-
-        */
-
         meshDensityX = _meshDensityX;
         meshDensityY = _meshDensityY;
         meshSize = 2 * meshDensityX * meshDensityY;
@@ -96,8 +72,6 @@ public:
         for (int i = 1; i < meshDensityY; i++)
             triangleYs.push_back(triangleYs.back() + disY);
         
-        // modDisX--;
-        // modDisY--;
         int modDisX = disX-1;
         int modDisY = disY-1;
 
@@ -141,35 +115,10 @@ public:
         {
             topTrianglesPoints[index++] = PolygonInterior::getInteriorPoints({t.a, t.b, t.c});
         }
-
-       
     }
 
-    void processFrame(bool bezierChanged, bool meshChanged, int _meshDensityX = -1, int _meshDensityY = -1)
+    void computeSurface()
     {
-        if (meshChanged)
-            initializeMeshStructure(_meshDensityX, _meshDensityY);
-
-        if (bezierChanged || meshChanged)
-        {
-            calculateHeights();
-            calculateNormalVectors();
-        }
-        calculateColors();
-    }
-
-    void calculateNormalVectors()
-    {
-        // for (Point point : allPoints)
-        // {
-        //     int x = point.x;
-        //     int y = point.y;
-        //     bitmap.N[x][y] = cross(bezier.tangentX(bitmap.xPoints[x], bitmap.yPoints[y]),
-        //                            bezier.tangentY(bitmap.xPoints[x], bitmap.yPoints[y]))
-        //                          .normalized();
-            
-        // }
-
         int x, y;
         for(Triangle t: topTriangles)
         {
@@ -204,15 +153,12 @@ public:
             }
         }
     
-
         int index = 0;
         for (vector<Point> vp : topTrianglesPoints)
         {
             Triangle t = topTriangles[index];
             float abcArea = area(t.a, t.b, t.c);
             
-            // cout << int(t.b.x) << " " << int(t.b.y) << endl;
-
             for (Point p : vp)
             {
                 float abpArea = area(t.a, t.b, p);
@@ -223,10 +169,6 @@ public:
                 float beta = acpArea / abcArea;
                 float gamma = abpArea / abcArea;
                 
-                // cout << alfa << " " << beta << " " << gamma << endl;
-                // cout << alfa + beta + gamma << endl << endl;
-                
-       
                 int x = p.x;
                 int y = p.y;
                
@@ -235,7 +177,6 @@ public:
             }
             index++;
         }
-
 
         index = 0;        
         for (vector<Point> vp : bottomTrianglesPoints)
@@ -252,9 +193,6 @@ public:
                 float beta = acpArea / abcArea;
                 float gamma = abpArea / abcArea;
                 
-                // cout << alfa << " " << beta << " " << gamma << endl;
-                // cout << alfa + beta + gamma << endl << endl;
-                
 
                 int x = p.x;
                 int y = p.y;
@@ -265,45 +203,8 @@ public:
         }
     }
 
-    void calculateHeights()
+    void computeColors()
     {
-        // for (Point point : allPoints)
-        // {
-        //     int x = point.x;
-        //     int y = point.y;
-        //     bitmap.height[x][y] = bezier.z(bitmap.xPoints[x], bitmap.yPoints[y]);
-        // }
-
-        // for (vector<Point> vp : bottomTrianglesPoints)
-        // {
-        //     for (Point p : vp)
-        //     {
-        //         int x = p.x;
-        //         int y = p.y;
-        //         bitmap.height[x][y] = bezier.z(bitmap.xPoints[x], bitmap.yPoints[y]);
-        //     }
-        // }
-        
-        // for (vector<Point> vp : topTrianglesPoints)
-        // {
-        //     for (Point p : vp)
-        //     {
-        //         int x = p.x;
-        //         int y = p.y;
-        //         bitmap.height[x][y] = bezier.z(bitmap.xPoints[x], bitmap.yPoints[y]);
-        //     }
-        // }
-    }
-
-    void calculateColors()
-    {
-        // for (int y = 0; y < H; y++)
-        //     for (int x = 0; x < W; x++)
-        //     {
-        //         bitmap.color[x][y] = prp.computePixelColor(x, y);
-        //         // cout << "color w (x, y) " << x << " " << y << " " << bitmap.color[x][y].toInteger() << endl;
-        //     }
-
         for (vector<Point> vp : bottomTrianglesPoints)
         {
             for (Point p : vp)
@@ -325,55 +226,4 @@ public:
         }
 
     }
-    // void gpu()
-    // {
-    //     int cnt = meshDensityX * meshDensityY;
-    //     VertexArray gpuBottomTriangles(sf::Triangles, cnt * 3);
-    //     VertexArray gpuTopTriangles(sf::Triangles, cnt * 3);
-
-    //     int index = 0;
-    //     for (float x : triangleXs)
-    //     {
-    //         for (float y : triangleYs)
-    //         {
-    //             allPoints.push_back({x, y});
-
-    //             allVertices.push_back({x, y});
-    //             allVertices.push_back({x + modDisX, y});
-    //             allVertices.push_back({x + modDisX, y + modDisY});
-
-    //             bottomTriangles.push_back(Triangle({x, y}, {x + modDisX, y}, {x + modDisX, y + modDisY}));
-
-    //             gpuBottomTriangles[index].color = Color::Red;
-    //             gpuBottomTriangles[index++].position = {x, H - y};
-
-    //             gpuBottomTriangles[index].color = Color::Green;
-    //             gpuBottomTriangles[index++].position = {x + modDisX, H - y};
-
-    //             gpuBottomTriangles[index].color = Color::Blue;
-    //             gpuBottomTriangles[index++].position = {x + modDisX, H - (y + modDisY)};
-    //         }
-    //     }
-
-    //     index = 0;
-    //     for (float x : triangleXs)
-    //     {
-    //         for (float y : triangleYs)
-    //         {
-    //             allVertices.push_back({x, y});
-    //             allVertices.push_back({x, y + modDisY});
-    //             allVertices.push_back({x + modDisX, y + modDisY});
-    //             topTriangles.push_back(Triangle({x, y}, {x, y + modDisY}, {x + modDisX, y + modDisY}));
-
-    //             gpuTopTriangles[index].color = Color::Cyan;
-    //             gpuTopTriangles[index++].position = {x, H - y};
-
-    //             gpuTopTriangles[index].color = Color::Yellow;
-    //             gpuTopTriangles[index++].position = {x, H - (y + modDisY)};
-
-    //             gpuTopTriangles[index].color = Color::Magenta;
-    //             gpuTopTriangles[index++].position = {x + modDisX, H - (y + modDisY)};
-    //         }
-    //     }
-    // }
 };

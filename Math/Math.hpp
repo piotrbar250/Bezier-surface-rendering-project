@@ -59,6 +59,12 @@ namespace Math
                 z - b.z
             );
         }
+
+        bool operator ==(const Point3d& b) const
+        {
+            return x == b.x && y == b.y && z == b.z;
+        }
+
         float norm() const
         {
             return sqrt(x*x + y*y + z*z);
@@ -72,6 +78,14 @@ namespace Math
                 z / _norm
             );
         }
+        
+        Point3d operator *(const float m[3][3]) const
+        {
+            return Point3d(m[0][0], m[1][0], m[2][0]) * x + 
+                   Point3d(m[0][1], m[1][1], m[2][1]) * y +
+                   Point3d(m[0][2], m[1][2], m[2][2]) * z;
+        }
+
         friend ostream& operator <<(ostream& os, const Point3d p)
         {
             return os << p.x << " " << p.y << " " << p.z << endl;

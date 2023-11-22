@@ -6,6 +6,7 @@
 #include "Bitmap.hpp"
 #include "Bezier.hpp"
 #include "LightSource.hpp"
+#include "ImageManager.hpp"
 //LambertianReflectanceProcessor
 
 #include <chrono>
@@ -16,16 +17,18 @@ class PhongReflectionProcessor
 public:
     Bezier& bezier;
     LightSource& lightSource;
-    float kd = 0.5, ks = 0.5;
-    Point3d Il = {1,1,1}, Io = {0,0,1};
+    float kd = 1, ks = 1;
+    Point3d Il = {1,1,1}, Io = {1,0,0};
     Point3d N, L;
     Point3d V = {0, 0, 1}, R;
-    float m = 1;
+    float m = 100;
     
     PhongReflectionProcessor(Bezier& bezier, LightSource& lightSource) : bezier(bezier), lightSource(lightSource) {}
 
     Color computePixelColor(int x, int y)
-    {
+    {   
+        // Io = ImageManager::colorToVector(bitmap.background[x][y]);
+        // cout << Io << endl;
         N = bitmap.N[x][y];
         
         L = lightSource.vector - Point3d(bitmap.xPoints[x], bitmap.yPoints[y], bitmap.height[x][y]);
@@ -38,7 +41,7 @@ public:
 
         Point3d Ip = Il * Io * kd * max(0.0f, dot(N, L));
 
-        Ip = Ip + Il * Io * kd * pow(cos_V_R, m);
+        Ip = Ip + Il * Io * ks * pow(cos_V_R, m);
 
         return Color(Ip.x*255, Ip.y*255, Ip.z*255);
     }

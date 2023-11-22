@@ -21,7 +21,10 @@ public:
     float height[W][H];
     Color color[W][H];
     float xPoints[W], yPoints[H]; 
-    Math::Point3d N[W][H];
+    Math::Point3d N[W][H]; 
+    
+    Color background[W][H];
+    Color normalmap[W][H];
 
     Bitmap()
     {

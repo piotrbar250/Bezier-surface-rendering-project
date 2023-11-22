@@ -1,3 +1,4 @@
+
 // const int N = 720, M = 1152;
 #include <SFML/Graphics.hpp>
 #include "Bezier.hpp"
@@ -13,6 +14,8 @@
 #include <string>
 #include "PolygonInterior.hpp"
 #include "TriangleMeshProcessor.hpp"
+#include "ImageManager.hpp"
+#include "NormalmapProcessor.hpp"
 
 using namespace std;
 using namespace sf;
@@ -22,6 +25,7 @@ Bitmap bitmap;
 
 int main()
 {
+
     window.create(VideoMode(W, H), "Bezier surface");
     window.setFramerateLimit(110);
 
@@ -36,13 +40,19 @@ int main()
     PhongReflectionProcessor prp(bezier, lightSource);
     FramePixelProcessor fpp(bezier, prp);
     TriangleMeshProcessor tmp(bezier, prp);
+    // NormalmapProcessor nmp;
 
     // renderer = new GreenShadesPixelRenderer(bezier, lightSource);
     renderer = new PixelRenderer(bezier, lightSource);
 
-    fpp.calculateHeights();
+
+    // fpp.calculateHeights();
     // tmp.initializeMeshStructure(5, 7);
-    // tmp.processFrame(true, true, 100, 100);
+
+    ImageManager::loadImage();
+    tmp.processFrame(true, true, 100, 100);
+
+    
 
     while (window.isOpen())
     {
@@ -63,9 +73,9 @@ int main()
 
         // // if(true) // here goes a condtition for changing control points
         // //     setHeights();
-        fpp.calculateColors();
+        // fpp.calculateColors();
 
-        // tmp.processFrame(false, false);
+        tmp.processFrame(false, false);
 
         renderer->draw();
 
@@ -79,4 +89,3 @@ int main()
 
     return 0;
 }
-
