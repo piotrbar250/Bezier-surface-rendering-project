@@ -59,11 +59,13 @@ public:
                 {
                     button.setFillColor(Color::Green);
                     onClickFunctionOn();
+                    background = true;
                 }
                 else
                 {
                     button.setFillColor(Color::Red);
                     onClickFunctionOff();
+                    background = false;
                 }
             }
         }

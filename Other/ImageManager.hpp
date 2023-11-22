@@ -42,21 +42,4 @@ public:
             float(color.b) / 255.0f
         };
     }
-
-
-    // static Point3d colorToVector(Color color)
-    // {
-    //     // cout << "color " << color.g << endl;
-    //     return Point3d{
-    //         float(color.r) / 255.0f,
-    //         float(color.g) / 255.0f,
-    //         float(color.b) / 255.0f
-    //     };
-    // }
-
-    // static void applyNormalmap()
-    // {
-    //     float matrix[3][3] 
-    //     Point3d det = cross([bitm, {0,0,1})
-    // }
 };

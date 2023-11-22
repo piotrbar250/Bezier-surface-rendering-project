@@ -17,7 +17,7 @@ public:
     Bezier& bezier;
     LightSource& lightSource;
     float kd = 0.5, ks = 0.5;
-    Point3d Il = {1,1,1}, Io = {0,0,1};
+    Point3d Il = {1,1,1}, Io = IO_COLOR;
     Point3d N, L;
     Point3d V = {0, 0, 1}, R;
     float m = 1;
@@ -26,8 +26,11 @@ public:
 
     Color computePixelColor(int x, int y)
     {   
-        // Io = ImageManager::colorToVector(bitmap.background[x][y]);
-        // cout << Io << endl;
+        if(background)
+            Io = ImageManager::colorToVector(bitmap.background[x][y]);
+        else
+            Io = IO_COLOR;
+        
         N = bitmap.N[x][y];
         
         L = lightSource.vector - Point3d(bitmap.xPoints[x], bitmap.yPoints[y], bitmap.height[x][y]);
@@ -43,5 +46,15 @@ public:
         Ip = Ip + Il * Io * ks * pow(cos_V_R, m);
 
         return Color(Ip.x*255, Ip.y*255, Ip.z*255);
+    }
+
+    void setKd(float kd)
+    {
+        this->kd = kd;
+    }
+
+    void setKs(float ks)
+    {
+        this->ks = ks;
     }
 };

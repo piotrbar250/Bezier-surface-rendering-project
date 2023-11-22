@@ -16,24 +16,24 @@ public:
     TriangleMeshProcessor& triangleMeshProcessor;
     vector<Point> points = {
         {10, 20},
-        {333, 20},
-        {666, 20},
-        {980, 20},
+        {260, 20},
+        {528, 20},
+        {777, 20},
 
-        {10, 333},
-        {333, 333},
-        {666, 333},
-        {980, 333},
+        {10, 260},
+        {260, 260},
+        {528, 260},
+        {777, 260},
 
-        {10, 666},
-        {333, 666},
-        {666, 666},
-        {980, 666},
+        {10, 528},
+        {260, 528},
+        {528, 528},
+        {777, 528},
 
-        {10, 999},
-        {333, 999},
-        {666, 999},
-        {980, 999}
+        {10, 797},
+        {260, 797},
+        {528, 797},
+        {777, 797}
     };
 
     map<pair<int,int>, float*> dictionary;
@@ -41,24 +41,24 @@ public:
     ControlPoints(Bezier &bezier, TriangleMeshProcessor& triangleMeshProcessor) : bezier(bezier), triangleMeshProcessor(triangleMeshProcessor)
     {
         dictionary[{10, 20}] = &(bezier.Z[0][0]);
-        dictionary[{333, 20}] = &(bezier.Z[1][0]);
-        dictionary[{666, 20}] = &(bezier.Z[2][0]);
-        dictionary[{980, 20}] = &(bezier.Z[3][0]);
+        dictionary[{260, 20}] = &(bezier.Z[1][0]);
+        dictionary[{528, 20}] = &(bezier.Z[2][0]);
+        dictionary[{777, 20}] = &(bezier.Z[3][0]);
 
-        dictionary[{10, 333}] = &(bezier.Z[0][1]);
-        dictionary[{333, 333}] = &(bezier.Z[1][1]);
-        dictionary[{666, 333}] = &(bezier.Z[2][1]);
-        dictionary[{980, 333}] = &(bezier.Z[3][1]);
+        dictionary[{10, 260}] = &(bezier.Z[0][1]);
+        dictionary[{260, 260}] = &(bezier.Z[1][1]);
+        dictionary[{528, 260}] = &(bezier.Z[2][1]);
+        dictionary[{777, 260}] = &(bezier.Z[3][1]);
 
-        dictionary[{10, 666}] = &(bezier.Z[0][2]);
-        dictionary[{333, 666}] = &(bezier.Z[1][2]);
-        dictionary[{666, 666}] = &(bezier.Z[2][2]);
-        dictionary[{980, 666}] = &(bezier.Z[3][2]);
+        dictionary[{10, 528}] = &(bezier.Z[0][2]);
+        dictionary[{260, 528}] = &(bezier.Z[1][2]);
+        dictionary[{528, 528}] = &(bezier.Z[2][2]);
+        dictionary[{777, 528}] = &(bezier.Z[3][2]);
 
-        dictionary[{10, 999}] = &(bezier.Z[0][3]);
-        dictionary[{333, 999}] = &(bezier.Z[1][3]);
-        dictionary[{666, 999}] = &(bezier.Z[2][3]);
-        dictionary[{980, 999}] = &(bezier.Z[3][3]); 
+        dictionary[{10, 797}] = &(bezier.Z[0][3]);
+        dictionary[{260, 797}] = &(bezier.Z[1][3]);
+        dictionary[{528, 797}] = &(bezier.Z[2][3]);
+        dictionary[{777, 797}] = &(bezier.Z[3][3]); 
     }
 
     void handleEvent(const Event &event)
@@ -84,7 +84,7 @@ public:
                 {
                     *(dictionary[{x, y}]) = offsetThickness;
                     triangleMeshProcessor.processFrame(true, false);
-                    cout << x << " " << y << endl;
+                    // cout << x << " " << y <<
                 }
             }
         }

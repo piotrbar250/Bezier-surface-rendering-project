@@ -36,6 +36,7 @@ target_include_directories(program PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Light
     ${CMAKE_CURRENT_SOURCE_DIR}/Other
     ${CMAKE_CURRENT_SOURCE_DIR}/NormalmapProcessor
+    ${CMAKE_CURRENT_SOURCE_DIR}/BackgroundProcessor
     ${CMAKE_CURRENT_SOURCE_DIR}/UI
 )
 

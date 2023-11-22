@@ -11,7 +11,7 @@ class NormalmapProcessor
 {
 public: 
 
-    static void apply(string path="./../Normal maps/normal_map3.png")
+    static void apply(string path="./../Normal maps/normal_map1.png")
     {
         ImageManager::loadImage(path, bitmap.normalmap);
 

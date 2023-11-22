@@ -59,13 +59,13 @@ public:
                 {
                     button.setFillColor(Color::Green);
                     onClickFunctionOn();
-                    triangleMeshProcessor.processFrame(false, false, -1, -1, true, false);
+                    triangleMeshProcessor.launchNormalmap();
                 }
                 else
                 {
                     button.setFillColor(Color::Red);
                     onClickFunctionOff();
-                    triangleMeshProcessor.processFrame(false, false, -1, -1, false, true);
+                    triangleMeshProcessor.hideNormalmap();
                 }
             }
         }

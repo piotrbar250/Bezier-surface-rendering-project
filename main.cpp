@@ -16,7 +16,7 @@
 #include "TriangleMeshProcessor.hpp"
 #include "ImageManager.hpp"
 #include "NormalmapProcessor.hpp"
-#include "Slider.hpp"
+#include "BezierSlider.hpp"
 #include "ControlPointsUI.hpp"
 #include "NormalmapButton.hpp"
 #include "BackgroundButton.hpp"
@@ -40,15 +40,15 @@ void myfunction_off()
 
 int main()
 {
-    window.create(VideoMode(W+300, H), "Bezier surface");
+    window.create(VideoMode(W+400, H), "Bezier surface");
     window.setFramerateLimit(110);
 
 
-    sf::View normalView(sf::FloatRect(0, 0, W+300, H));
+    sf::View normalView(sf::FloatRect(0, 0, W+400, H));
     sf::View shrunkView(sf::FloatRect(0, 0, W, H)); // smaller width
     bool isShrunk = false;
 
-    RectangleShape background(Vector2f(W+300, H));
+    RectangleShape background(Vector2f(W+400, H));
     background.setFillColor(Color::White);
 
     FrameRateCalculator frameRateCalculator;
@@ -67,8 +67,19 @@ int main()
 
     ImageManager::loadImage();
     triangleMeshProcessor.processFrame(true, true, 100, 100);
-    Slider slider(250);
-    Slider slider2(150);
+    // BezierSlider slider(250);
+    BezierSlider bezierSlider(prp, triangleMeshProcessor, [&](){bezierSlider.adjustBezierValue();}, 150, -80);
+    
+    BezierSlider meshSlider(prp, triangleMeshProcessor, [&](){ meshSlider.adjustMesh(); }, 250, -80);
+    
+    BezierSlider zSlider(prp, triangleMeshProcessor, [&](){ zSlider.adjustMesh(); }, 350, -80);
+
+    BezierSlider kdSlider(prp, triangleMeshProcessor, [&](){kdSlider.adjustKd();}, 150, 180);
+
+    BezierSlider ksSlider(prp, triangleMeshProcessor, [&](){ksSlider.adjustKs();}, 250, 180);
+    
+    BezierSlider mSlider(prp, triangleMeshProcessor, [&](){mSlider.adjustKs();}, 350, 180);
+
 
     NormalmapButton normalmapButton(window, myfunction_on, myfunction_off, triangleMeshProcessor);
 
@@ -83,8 +94,12 @@ int main()
         {
             if (event.type == Event::Closed)
                 window.close();
-            slider.handleEvent(event);
-            slider2.handleEvent(event);
+            
+            bezierSlider.handleEvent(event);
+            meshSlider.handleEvent(event);
+            kdSlider.handleEvent(event);
+            ksSlider.handleEvent(event);
+            
             controlPoints.handleEvent(event);
             normalmapButton.handleEvent(event, window);
             backgroundButton.handleEvent(event, window);
@@ -117,11 +132,17 @@ int main()
 
         triangleMeshProcessor.processFrame(false, false);
 
-        slider.draw(window);
-        slider2.draw(window);
+        // slider.draw(window);
+        bezierSlider.draw(window);
+        // meshSlider.draw(window);
+        meshSlider.draw(window);
+        kdSlider.draw(window);
+        ksSlider.draw(window);
+        zSlider.draw(window);
+        mSlider.draw(window);
         renderer->draw();
         
-        slider2.handleEvent(event);
+        // slider2.handleEvent(event);
         normalmapButton.draw(window);
         backgroundButton.draw(window);
         window.display();

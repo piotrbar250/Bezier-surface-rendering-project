@@ -14,9 +14,9 @@ public:
     float angle;
     Point3d vector;
 
-    LightSource() : LightSource(1) {}
+    LightSource() : LightSource(2) {}
 
-    LightSource(float z ) : originX(W/2), originY(H/2), z(z), radius(450), angle(-0.05f){}
+    LightSource(float z ) : originX(W/2), originY(H/2), z(z), radius(350), angle(-0.05f){}
 
     void adjustPosition()
     {
