@@ -5,6 +5,7 @@
 #include "Bitmap.hpp"
 #include "PhongReflectionProcessor.hpp"
 #include "TriangleMeshProcessor.hpp"
+#include "LightSource.hpp"
 
 using namespace std;
 using namespace sf;
@@ -12,6 +13,7 @@ using namespace sf;
 class BezierSlider
 {
 public:
+    LightSource& lightSource;
     TriangleMeshProcessor& triangleMeshProcessor;
     PhongReflectionProcessor& prp;
     RectangleShape background;
@@ -67,7 +69,30 @@ static const vector<int> discreteValues = {2, 4, 5, 8, 10, 16, 20, 25, 32, 40, 5
         triangleMeshProcessor.processFrame(false, true, selectedValue, selectedValue);
     }
 
-    BezierSlider(PhongReflectionProcessor & prp, TriangleMeshProcessor& triangleMeshProcessor, function<void()> func, int shift = 0, int shiftV = 0) : prp(prp), onHandleMoved(func), triangleMeshProcessor(triangleMeshProcessor)
+    void adjustZ()
+{
+    float relativeY = handle.getPosition().y - background.getPosition().y;
+    float ratio = 1.0f - (relativeY / (background.getSize().y - handle.getSize().y));
+    
+    // Map the ratio to the range 0.01 to 2
+    float zValue = 0.01f + (1.99f * ratio);
+    cout << "Z value: " << zValue << endl;
+    lightSource.setZ(zValue);
+}
+
+void adjustM()
+{
+    float relativeY = handle.getPosition().y - background.getPosition().y;
+    float ratio = 1.0f - (relativeY / (background.getSize().y - handle.getSize().y));
+
+    // Map the ratio to the range 1 to 100
+    int mValue = static_cast<int>(1 + 99 * ratio);
+    cout << "M value: " << mValue << endl;
+    prp.setM(mValue); // Assuming there's a method setM in PhongReflectionProcessor
+}
+
+
+    BezierSlider(PhongReflectionProcessor & prp, TriangleMeshProcessor& triangleMeshProcessor, LightSource& lightSource, function<void()> func, int shift = 0, int shiftV = 0) : prp(prp), onHandleMoved(func), triangleMeshProcessor(triangleMeshProcessor), lightSource(lightSource)
     {
         if (!font.loadFromFile("./../UI/Arial.ttf"))
         {

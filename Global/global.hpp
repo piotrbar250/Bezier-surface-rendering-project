@@ -14,3 +14,5 @@ bool debug = false;
 bool background = false;
 
 Math::Point3d IO_COLOR = {0, 0, 1};
+
+string normalmapPath = "./../Normal maps/normal_map1.png";

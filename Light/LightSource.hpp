@@ -30,4 +30,9 @@ public:
     {
         angle += 0.02f;
     }
+
+    void setZ(float z)
+    {
+        this->z = z;
+    }
 };

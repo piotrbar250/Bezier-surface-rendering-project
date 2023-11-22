@@ -65,11 +65,13 @@ public:
         }
     }
 
-    void draw()
+    void draw(bool isShrunk = false)
     {
         setColors();
         window.draw(&points[0], points.size(), sf::Points);
         drawLightSource();
-        drawControlPoints();
+
+        if(!isShrunk)
+            drawControlPoints();
     }
 };

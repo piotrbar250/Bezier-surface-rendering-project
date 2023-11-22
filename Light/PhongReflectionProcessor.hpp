@@ -57,4 +57,9 @@ public:
     {
         this->ks = ks;
     }
+
+    void setM(float m)
+    {
+        this->m = m;
+    }
 };

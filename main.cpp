@@ -68,18 +68,17 @@ int main()
     ImageManager::loadImage();
     triangleMeshProcessor.processFrame(true, true, 100, 100);
     // BezierSlider slider(250);
-    BezierSlider bezierSlider(prp, triangleMeshProcessor, [&](){bezierSlider.adjustBezierValue();}, 150, -80);
+    BezierSlider bezierSlider(prp, triangleMeshProcessor, lightSource, [&](){bezierSlider.adjustBezierValue();}, 150, -80);
     
-    BezierSlider meshSlider(prp, triangleMeshProcessor, [&](){ meshSlider.adjustMesh(); }, 250, -80);
+    BezierSlider meshSlider(prp, triangleMeshProcessor, lightSource, [&](){ meshSlider.adjustMesh(); }, 250, -80);
     
-    BezierSlider zSlider(prp, triangleMeshProcessor, [&](){ zSlider.adjustMesh(); }, 350, -80);
+    BezierSlider zSlider(prp, triangleMeshProcessor, lightSource, [&](){ zSlider.adjustZ(); }, 350, -80);
 
-    BezierSlider kdSlider(prp, triangleMeshProcessor, [&](){kdSlider.adjustKd();}, 150, 180);
+    BezierSlider kdSlider(prp, triangleMeshProcessor,lightSource, [&](){kdSlider.adjustKd();}, 150, 180);
 
-    BezierSlider ksSlider(prp, triangleMeshProcessor, [&](){ksSlider.adjustKs();}, 250, 180);
+    BezierSlider ksSlider(prp, triangleMeshProcessor,lightSource, [&](){ksSlider.adjustKs();}, 250, 180);
     
-    BezierSlider mSlider(prp, triangleMeshProcessor, [&](){mSlider.adjustKs();}, 350, 180);
-
+    BezierSlider mSlider(prp, triangleMeshProcessor,lightSource, [&](){mSlider.adjustM();}, 350, 180);
 
     NormalmapButton normalmapButton(window, myfunction_on, myfunction_off, triangleMeshProcessor);
 
@@ -99,20 +98,22 @@ int main()
             meshSlider.handleEvent(event);
             kdSlider.handleEvent(event);
             ksSlider.handleEvent(event);
-            
+            zSlider.handleEvent(event);
+            mSlider.handleEvent(event);
+
             controlPoints.handleEvent(event);
             normalmapButton.handleEvent(event, window);
             backgroundButton.handleEvent(event, window);
 
             if (event.type == sf::Event::KeyPressed) {
-                if (event.key.code == sf::Keyboard::H) {
+                if (event.key.code == sf::Keyboard::S) {
                     if (!isShrunk) {
                         window.setView(shrunkView); // Set the cropped view
                         window.setSize(sf::Vector2u(W, H)); // Resize window
                         isShrunk = true;
                     } else {
                         window.setView(normalView); // Set the normal view
-                        window.setSize(sf::Vector2u(W+300, H)); // Resize window back to original size
+                        window.setSize(sf::Vector2u(W+400, H)); // Resize window back to original size
                         isShrunk = false;
                     }
                 }
@@ -126,7 +127,7 @@ int main()
         // window.draw(background);
         lightSource.nextFrame();
         lightSource.adjustPosition();
-
+        
         // // if(true) // here goes a condtition for changing control points
         // //     setHeights();
 
@@ -140,7 +141,10 @@ int main()
         ksSlider.draw(window);
         zSlider.draw(window);
         mSlider.draw(window);
-        renderer->draw();
+        zSlider.draw(window);
+        mSlider.draw(window);
+
+        renderer->draw(isShrunk);
         
         // slider2.handleEvent(event);
         normalmapButton.draw(window);
