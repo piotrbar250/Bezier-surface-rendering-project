@@ -32,7 +32,7 @@ public:
 
     TriangleMeshProcessor(Bezier &bezier, PhongReflectionProcessor &prp) : bezier(bezier), prp(prp) {}
 
-    void processFrame(bool bezierChanged, bool meshChanged, int _meshDensityX = -1, int _meshDensityY = -1)
+    void processFrame(bool bezierChanged, bool meshChanged, int _meshDensityX = -1, int _meshDensityY = -1, bool launchNormalmap = false, bool shutdownNormalmap = false)
     {
         if (meshChanged)
             initializeMeshStructure(_meshDensityX, _meshDensityY);
@@ -40,8 +40,14 @@ public:
         if (bezierChanged || meshChanged)
         {
             computeSurface();
-            NormalmapProcessor::apply();
         }
+        
+        if(launchNormalmap)
+            NormalmapProcessor::apply();
+        
+        if(shutdownNormalmap)
+            computeSurface();
+
         computeColors();
     }
 

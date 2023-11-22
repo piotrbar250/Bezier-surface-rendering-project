@@ -6,6 +6,8 @@
 #include "Bitmap.hpp"
 #include "LightSource.hpp"
 #include <iostream>
+#include "ControlPointsUI.hpp"
+#include "PolygonInterior.hpp"
 
 using namespace std;
 using namespace sf;
@@ -19,8 +21,9 @@ public:
     vector<Color> colors;
     Bezier &bezier;
     LightSource &lightSource;
+    ControlPoints& controlPoints;
 
-    PixelRenderer(Bezier &bezier, LightSource &lightSource) : bezier(bezier), lightSource(lightSource)
+    PixelRenderer(Bezier &bezier, LightSource &lightSource, ControlPoints& controlPoints) : bezier(bezier), lightSource(lightSource), controlPoints(controlPoints)
     {
         prepPoints();
     }
@@ -51,10 +54,22 @@ public:
         window.draw(circle);
     }
 
+    void drawControlPoints()
+    {
+        for(Point p: controlPoints.points)
+        {
+            CircleShape circle(10);
+            circle.setFillColor(Color::Green);
+            circle.setPosition(p.x, H-p.y);
+            window.draw(circle);
+        }
+    }
+
     void draw()
     {
         setColors();
         window.draw(&points[0], points.size(), sf::Points);
         drawLightSource();
+        drawControlPoints();
     }
 };

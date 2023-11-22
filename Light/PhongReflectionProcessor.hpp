@@ -7,7 +7,6 @@
 #include "Bezier.hpp"
 #include "LightSource.hpp"
 #include "ImageManager.hpp"
-//LambertianReflectanceProcessor
 
 #include <chrono>
 #include <thread>
@@ -17,11 +16,11 @@ class PhongReflectionProcessor
 public:
     Bezier& bezier;
     LightSource& lightSource;
-    float kd = 1, ks = 1;
-    Point3d Il = {1,1,1}, Io = {1,0,0};
+    float kd = 0.5, ks = 0.5;
+    Point3d Il = {1,1,1}, Io = {0,0,1};
     Point3d N, L;
     Point3d V = {0, 0, 1}, R;
-    float m = 100;
+    float m = 1;
     
     PhongReflectionProcessor(Bezier& bezier, LightSource& lightSource) : bezier(bezier), lightSource(lightSource) {}
 

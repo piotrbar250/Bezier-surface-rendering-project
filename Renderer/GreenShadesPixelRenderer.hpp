@@ -5,6 +5,7 @@
 #include "global.hpp"
 #include "PixelRenderer.hpp"
 #include <iostream>
+#include "ControlPointsUI.hpp"
 
 using namespace std;
 using namespace sf;
@@ -12,7 +13,7 @@ using namespace sf;
 class GreenShadesPixelRenderer : public PixelRenderer
 {
 public:
-    GreenShadesPixelRenderer(Bezier &bezier, LightSource& lightSource) : PixelRenderer(bezier, lightSource) {}
+    GreenShadesPixelRenderer(Bezier &bezier, LightSource& lightSource, ControlPoints& controlPoints) : PixelRenderer(bezier, lightSource, controlPoints) {}
 
     virtual void setColors() override
     {

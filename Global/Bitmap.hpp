@@ -4,6 +4,9 @@
 
 // const int H = 720, W = 1152;
 const int W = 1000, H = 1000;
+const int N = 1000, M = 1000;
+
+int offsetThickness = 0;
 
 class Bitmap
 {

@@ -16,17 +16,28 @@
 #include "TriangleMeshProcessor.hpp"
 #include "ImageManager.hpp"
 #include "NormalmapProcessor.hpp"
-
+#include "Slider.hpp"
+#include "ControlPointsUI.hpp"
+#include "NormalmapButton.hpp"
 using namespace std;
 using namespace sf;
 
 RenderWindow window;
 Bitmap bitmap;
 
+void myfunction_on()
+{
+    cout << "Button turned on!" << endl;
+}
+
+void myfunction_off()
+{
+    cout << "Button turned off!" << endl;
+}
+
 int main()
 {
-
-    window.create(VideoMode(W, H), "Bezier surface");
+    window.create(VideoMode(W+300, H), "Bezier surface");
     window.setFramerateLimit(110);
 
     RectangleShape background(Vector2f(W+300, H));
@@ -39,21 +50,20 @@ int main()
     LightSource lightSource;
     PhongReflectionProcessor prp(bezier, lightSource);
     FramePixelProcessor fpp(bezier, prp);
-    TriangleMeshProcessor tmp(bezier, prp);
-    // NormalmapProcessor nmp;
+    TriangleMeshProcessor triangleMeshProcessor(bezier, prp);
+    ControlPoints controlPoints(bezier, triangleMeshProcessor);
 
     // renderer = new GreenShadesPixelRenderer(bezier, lightSource);
-    renderer = new PixelRenderer(bezier, lightSource);
+    renderer = new PixelRenderer(bezier, lightSource, controlPoints);
 
-
-    // fpp.calculateHeights();
-    // tmp.initializeMeshStructure(5, 7);
 
     ImageManager::loadImage();
-    tmp.processFrame(true, true, 100, 100);
+    triangleMeshProcessor.processFrame(true, true, 100, 100);
+    Slider slider(250);
+    Slider slider2(150);
 
+    NormalmapButton normalmapButton(window, myfunction_on, myfunction_off, triangleMeshProcessor);
     
-
     while (window.isOpen())
     {
         Event event;
@@ -61,30 +71,33 @@ int main()
         {
             if (event.type == Event::Closed)
                 window.close();
+                
+            slider.handleEvent(event);
+            slider2.handleEvent(event);
+            controlPoints.handleEvent(event);
+            normalmapButton.handleEvent(event, window);
         }
 
-        frameRateCalculator.update();
+        // frameRateCalculator.update();
 
         window.clear(Color::Black);
         // window.draw(background);
-
         lightSource.nextFrame();
         lightSource.adjustPosition();
 
         // // if(true) // here goes a condtition for changing control points
         // //     setHeights();
-        // fpp.calculateColors();
 
-        tmp.processFrame(false, false);
+        triangleMeshProcessor.processFrame(false, false);
 
+        slider.draw(window);
+        slider2.draw(window);
         renderer->draw();
-
-        // PolygonFilling::drawPolygon();
-
-        // tmp.initializeMeshStructure(5, 7);
+        
+        slider2.handleEvent(event);
+        normalmapButton.draw(window);
 
         window.display();
-        // return 0;
     }
 
     return 0;

@@ -1,19 +1,3 @@
-/*
-Mam takie zadanie:
-Powinna istnieć możliwość (checkbox) modyfikacji wektora normalnego na podstawie wczytanej mapy wektorów normalnych.
-Zmodyfikowany wektor normalny: N = M*Ntekstury
-  Ntekstury - wektor normalny(wersora) odczytany z koloru tekstury (NormalMap) dla całego 'panelu',
-  Nx=<-1,+1>, Ny=<-1,+1>, Nz=<-1,+1> (składowa Nz powinna być dodatnia - dlatego Blue=128..255)
-  M - macierz przekształcenia (obrotu) dla wektora z tekstury:
-    M3x3 = [T, B, Npowierzchni]
-     B (wersor binormalny) = Npowierzchni x [0,0,1] (iloczyn wektorowy). Jeśli Npowierzchni=[0,0,1] to B = [0,1,0]
-     T (wersor styczny) = B x Npowierzchni (iloczyn wektorowy)
-  Npowierzchni - wektor normalny(wersor) odczytany/wyliczony z powierzchni
-
-Oto jak to napisalem, cos jest zle bo wyhodzi niesymetryczny wynik
-
-*/
-
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <iostream>
@@ -50,15 +34,6 @@ public:
                     B = cross(surfaceVector, Point3d(0, 0, 1)).normalized();
 
                 T = cross(B, surfaceVector).normalized();
-
-
-                // if(x == 50 && y == 50)
-                // {
-                //     cout << "surfaceVector " << surfaceVector << endl;
-                //     cout << "normalmapVector " << normmalmapVector << endl;
-                //     cout << "B " << B << endl;
-                //     cout << "T " << T << endl;
-                // }
 
                 matrix[0][0] = T.x; 
                 matrix[1][0] = T.y; 
